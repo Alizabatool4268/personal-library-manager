@@ -1,4 +1,5 @@
 import streamlit as st
+import pandas as pd
 
 
 st.set_page_config(layout="wide",page_icon="📔",page_title="Library-manager")
@@ -9,7 +10,7 @@ library:list=[
     {"title":"1984","author":"	George Orwell","genera":"Dystopian / Political","publication_year":"1949","isread":True},
     {"title":"Harry Potter and the Sorcerer's Stone","author":"	J.K. Rowling","genera":"Fantasy / Young Adult","publication_year":"1997","isread":False},
 ]
-
+# coppying the array so that when the script reloads the changes remain intact
 if "library" not in st.session_state:
     st.session_state.library = library.copy()
 
@@ -45,7 +46,7 @@ choices = st.sidebar.selectbox( "SELECT FROM THE FOLLOWING OPTIONS 📝 ", [
         "Add a book",
         "Remove a book",
         "Search for a book",
-        "Display statistics",])
+        "Display statistics"])
 
 
 if choices == "Add a book":
@@ -55,7 +56,6 @@ if choices == "Add a book":
     Genera = st.text_input("Enter Genera")
     year = st.number_input("Enter books publication year")
     isread = st.selectbox("Have you read this book",[True,False])
-    
     
     if st.button("add book"):
        new_book = {
@@ -67,13 +67,14 @@ if choices == "Add a book":
             }
        library.append(new_book)
        st.success(f"{title}✔️ written by {author}✏️ is added in to the library ✨✨")
-       print(library)
+       #print(library)
     else:
         print("This book can not be added")   
        
 else:
     print("The choice is not approparate ")  
     
+# Removing books    
 if choices == "Remove a book":
     st.title("REMOVE BOOKS")    
     remove_by_title = st.text_input("Enter book title")
@@ -83,12 +84,13 @@ if choices == "Remove a book":
        if selected_book :
            library.remove(selected_book)
            st.success("your book has been removed")
-           print(library)
+           #print(library)
        else:
            st.error ("this book is not avalible")   
 else:
     print("The choice is not approparate ")          
-    
+
+# Displaying all the books
 if choices == "Display all books":
     st.title("AVALABLE BOOKS")
     st.markdown(book_cards, unsafe_allow_html=True)
@@ -110,12 +112,14 @@ if choices == "Display all books":
 else:
     print("The choice is not approparate ")  
 
+
+# search for a book
 if choices == "Search for a book":
     search_input = st.text_input("Enter your book title")
     
     if st.button("search book"):
        searched_book = next((book for book in library if book["title"]==search_input),None)
-       print(searched_book)
+       #print(searched_book)
        if searched_book:
            st.success("Book found ✅")
            st.markdown(f"""
@@ -128,5 +132,31 @@ if choices == "Search for a book":
        else:
            st.error("Book not found")
 else:
-    print("The choice is not approparate ")    
-     
+    print("The choice is not approparate ")
+    
+    
+ # Displaying statisctics   
+if choices ==  "Display statistics":
+    st.title("LIBRARY STATISTICS",)
+    
+    total_books = len(library)
+    st.write(f"TOTAL BOOKS: {total_books}")
+  
+    read_book = sum(1 for book in library if book["isread"])
+    st.write(f"READ BOOKS: {read_book}")
+    
+    unread_books = total_books- read_book
+    st.write(f"UNREAD BOOKS: {unread_books}")
+
+    average = (read_book/total_books)*100 
+    st.write(f"PERCENTAGE: {average}%")
+    
+    represent_graph= pd.DataFrame({
+        "status":["read","unread"],
+        "count":[read_book,unread_books]
+    })
+    st.bar_chart(represent_graph.set_index("status"))
+
+else:
+    print("The choice is not approparate ")
+           
