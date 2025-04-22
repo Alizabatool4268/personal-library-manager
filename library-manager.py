@@ -38,7 +38,6 @@ book_cards= """
 """
 
 st.sidebar.title("EDIT YOUR LIBRARY✏️")    
-st.sidebar.title("Scroll to see results of your selected options") 
   
 # On the side bar the choices are provided for editing an managing library 
 choices = st.sidebar.selectbox( "SELECT FROM THE FOLLOWING OPTIONS 📝 ", [
