@@ -10,6 +10,11 @@ library:list=[
     {"title":"Harry Potter and the Sorcerer's Stone","author":"	J.K. Rowling","genera":"Fantasy / Young Adult","publication_year":"1997","isread":False},
 ]
 
+if "library" not in st.session_state:
+    st.session_state.library = library.copy()
+
+library = st.session_state.library
+
 book_cards= """
  <style>
  .cardHolderDiv {
@@ -31,33 +36,20 @@ book_cards= """
  </style>
 """
 
-st.markdown(book_cards, unsafe_allow_html=True)
-st.title("AVALABLE BOOKS")
-for book in library:
-    st.markdown(
-       f"""
-       <div class="cardHolderDiv">
-            <div class="card">
-                <h5>Title: {book["title"]}</h5>
-                <p>Author: {book["author"]}</p>
-                <p>Genera: {book["genera"]}</p>
-                <p>publication year: {book["publication_year"]}</p>
-            </div>
-       </div>
-       
-       """,unsafe_allow_html=True
-    )
 st.sidebar.title("EDIT YOUR LIBRARY✏️")    
-st.sidebar.title("Scroll to see results of your selected options")    
+st.sidebar.title("Scroll to see results of your selected options") 
+  
+# On the side bar the choices are provided for editing an managing library 
 choices = st.sidebar.selectbox( "SELECT FROM THE FOLLOWING OPTIONS 📝 ", [
+        "Display all books",
         "Add a book",
         "Remove a book",
-        "Display all books",
         "Search for a book",
         "Display statistics",])
 
+
 if choices == "Add a book":
-    
+    st.title("ADD BOOKS")
     title = st.text_input("Enter books title")
     author= st.text_input("Enter author name")
     Genera = st.text_input("Enter Genera")
@@ -75,11 +67,66 @@ if choices == "Add a book":
             }
        library.append(new_book)
        st.success(f"{title}✔️ written by {author}✏️ is added in to the library ✨✨")
+       print(library)
+    else:
+        print("This book can not be added")   
+       
 else:
-    print("You can not add a book")
+    print("The choice is not approparate ")  
     
 if choices == "Remove a book":
     st.title("REMOVE BOOKS")    
     remove_by_title = st.text_input("Enter book title")
+    
     if st.button("Remove book"):
-        print("")
+       selected_book = next((book for book in library if book["title"]==remove_by_title),None)
+       if selected_book :
+           library.remove(selected_book)
+           st.success("your book has been removed")
+           print(library)
+       else:
+           st.error ("this book is not avalible")   
+else:
+    print("The choice is not approparate ")          
+    
+if choices == "Display all books":
+    st.title("AVALABLE BOOKS")
+    st.markdown(book_cards, unsafe_allow_html=True)
+    for book in library:
+     st.markdown(
+        f"""
+        <div class="cardHolderDiv">
+             <div class="card">
+                 <h5>Title: {book["title"]}</h5>
+                 <p>Author: {book["author"]}</p>
+                 <p>Genera: {book["genera"]}</p>
+                 <p>publication year: {book["publication_year"]}</p>
+                 <p>Read: {"yes" if book["isread"] else "No"}</p>
+             </div>
+        </div>
+       
+        """,unsafe_allow_html=True
+     )
+else:
+    print("The choice is not approparate ")  
+
+if choices == "Search for a book":
+    search_input = st.text_input("Enter your book title")
+    
+    if st.button("search book"):
+       searched_book = next((book for book in library if book["title"]==search_input),None)
+       print(searched_book)
+       if searched_book:
+           st.success("Book found ✅")
+           st.markdown(f"""
+            **Title:** {searched_book['title']}  
+            **Author:** {searched_book['author']}  
+            **Genera:** {searched_book['genera']}  
+            **Publication Year:** {searched_book['publication_year']}  
+            **Read:** {"Yes" if searched_book["isread"] else "No"}
+            """)
+       else:
+           st.error("Book not found")
+else:
+    print("The choice is not approparate ")    
+     
