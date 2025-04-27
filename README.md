@@ -12,3 +12,19 @@ Framework used to create a fast, interactive, and user-friendly web app.
 
 ### Custom CSS —
 Applied for styling and enhancing the overall visual appearance.
+
+# ✨ Features
+### Add a Book
+Easily add new books to your library collection through a simple form.
+
+### Remove a Book
+Remove unwanted or outdated books from the list effortlessly.
+
+### Display All Books
+View all the books currently available in your library in a clean and organized format.
+
+### Search for a Specific Book
+Quickly find any book by searching through the library collection.
+
+### session based 
+The library is session based which clears up the saved data after every refresh and if the browser is closed.
